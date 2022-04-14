@@ -192,11 +192,11 @@ film_alb_negru :: film_alb_negru (const film_alb_negru &film_): film(film_){
 
 film_alb_negru &film_alb_negru :: operator = (const film_alb_negru &film2){
 
-        film::operator=(film2);
-        this->color = film2.color;
-        this->an_ap = film2.an_ap;
-        this->durata = film2.durata;
-        this->an_ap_color = film2.an_ap_color;
+    film::operator=(film2);
+    this->color = film2.color;
+    this->an_ap = film2.an_ap;
+    this->durata = film2.durata;
+    this->an_ap_color = film2.an_ap_color;
 
     return *this;
 
@@ -304,6 +304,74 @@ void film_documentar::timp_elem() {
 
 
 
+class film_comedie: virtual public film{
+private:
+    bool sitcom;
+    int nr_punchl;
+public:
+    film_comedie();
+    film_comedie(char *nume, int an_ap, int durata, bool sitcom, int nr_punchl);
+    film_comedie(const film_comedie& film_);
+    film_comedie& operator = (const film_comedie& documentar);
+    ~film_comedie(){};
+    istream& citire(istream& in);
+    ostream& afisare(ostream& out) const;
+    virtual void timp_elem();
+};
+
+film_comedie::film_comedie(): film() {
+    this->sitcom = false;
+    this->nr_punchl=0;
+}
+
+film_comedie::film_comedie (char *nume_, int an_ap_, int durata_, bool sitcom_, int nr_punchl_):film(nume, an_ap, durata){
+    this->sitcom=sitcom_;
+    this->nr_punchl=nr_punchl_;
+}
+
+
+film_comedie::film_comedie(const film_comedie &film_): film(film_){
+    this->sitcom=film_.sitcom;
+    this->nr_punchl=film_.nr_punchl;
+}
+
+film_comedie &film_comedie :: operator = (const film_comedie &comedie){
+
+    film::operator=(comedie);
+    this->sitcom =comedie.sitcom;
+    this->nr_punchl =comedie.nr_punchl;
+
+    return *this;
+
+}
+
+istream& film_comedie::citire(istream &in) {
+    film::citire(in);
+    cout <<"Este filmul un sitcom? (true/false)";
+    in >> this->sitcom;
+    cout << "Numarul de punchline-uri din film este de: ";
+    in >> this->nr_punchl;
+    return in;
+}
+
+ostream& film_comedie::afisare(ostream &out) const {
+    film::afisare(out);
+    out<<"Este"<<sitcom<<" ca filmul este un sitcom.\n"<<endl;
+    out <<"Sunt prezente " <<nr_punchl<<" de punchline-uri\n";
+    return out;
+}
+
+void film_comedie::timp_elem() {
+    cout << "Stiind ca pe parcursul filmului sunt " << nr_punchl <<"punchlineuri";
+    cout << "timpul dedicat unui singur tip este de " <<  durata/nr_punchl << " minute";
+
+}
+
+
+///-----------------------------------------------------------------------------------------------------------------------------------------------------------------------///
+
+
+
 class festival{
 private:
     string locatie;
@@ -315,7 +383,7 @@ public:
     festival& operator = (const festival& fest);
     friend istream& operator>>(istream& in, festival& fest);
     friend ostream& operator<<(ostream& out, const festival& fest);
-   // ~festival(){};
+    // ~festival(){};
 
 
 };
@@ -342,7 +410,7 @@ festival& festival::operator = (const festival& fest){
         this->locatie=fest.locatie;
         this->editie=fest.editie;
         this->nr_filme=fest.nr_filme;
-        
+
     }
     return *this;
 }
@@ -356,7 +424,7 @@ istream& operator>>(istream& in, festival& fest)
     cout<<"Cate filme se vor proiecta la aceasta editie?";
     in>>fest.nr_filme;
     return in;
-    
+
 }
 
 
@@ -364,11 +432,13 @@ ostream& operator<<(ostream& out, const festival& fest){
     cout<<"Locatia festivaluui este: "<<fest.locatie<<endl;
     cout<<"Este a "<<fest.editie<<"-a a festivalului."<<endl;
     cout<<"Se vor proiecta "<<fest.nr_filme <<"filme."<<endl;
-    
+
 }
 int main() {
 
-
+    film a;
+    cin>>a;
+    cout<<a;
 
     return 0;
 }
