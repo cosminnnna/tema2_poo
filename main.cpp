@@ -461,7 +461,7 @@ int main() {
     film_documentar Documentar;
     film_comedie Comedie;
 
-    film* *list_film=new film*[3];// animal *lista_animal[3];
+    film* *list_film=new film*[3];
     list_film[0]=&AlbNegru;
     list_film[1]=&Documentar;
     list_film[2]=&Comedie;
