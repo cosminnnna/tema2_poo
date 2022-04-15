@@ -73,16 +73,12 @@ film :: film (string nume_, int an_ap_, int durata_)
 }
 
 film :: film (const film &film_){
-//    strcpy(nume, film_.nume);
     nume = "$";
     an_ap = film_.an_ap;
     durata = film_.durata;
 
 }
 
-//film :: ~film() {
-//    delete[] nume;
-//}
 
 film &film :: operator = (const film& film2) {
     if (this!=&film2) {
@@ -227,13 +223,15 @@ istream& film_alb_negru::citire(istream &in){
     }
     else
         an_ap_color = 0;
+    return in;
 }
 
 ostream &film_alb_negru::afisare(ostream &out) const {
     film::afisare(out);
-    cout << "Este " << this->color << "ca filmul are o varianta color."<<endl;
+    out << "Este " << this->color << "ca filmul are o varianta color."<<endl;
     if(this->color)
-        cout << "Anul aparitiei variantei color este " << this->an_ap_color<<endl;
+        out << "Anul aparitiei variantei color este " << this->an_ap_color<<endl;
+    return out;
 
 }
 
