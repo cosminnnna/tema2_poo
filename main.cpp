@@ -62,7 +62,7 @@ film :: film() {
 
 }
 
-film :: film (string nume_, int an_ap_, int durata_)
+film :: film (string const nume_, int an_ap_, int durata_)
 {
 //    size_t len = strlen(nume_);
 //    nume = new char[len];
@@ -92,7 +92,7 @@ film &film :: operator = (const film& film2) {
 
 }
 
-void film ::set_nume(string alt_nume) {
+void film ::set_nume(string const alt_nume) {
 //    delete[] nume;
 //    strcpy(nume, alt_nume);
     this->nume=alt_nume;
@@ -181,7 +181,7 @@ film_alb_negru :: film_alb_negru():film(){
     an_ap_color = 0;
 }
 
-film_alb_negru :: film_alb_negru(string nume_, int an_ap_, int durata_, bool color_, int an_ap_color_) : film(nume_, an_ap_, durata_)
+film_alb_negru :: film_alb_negru(string const nume_, int an_ap_, int durata_, bool color_, int an_ap_color_) : film(nume_, an_ap_, durata_)
 {
 //    size_t len = strlen(nume_);
 //    nume = new char[len];
@@ -272,7 +272,7 @@ film_documentar::film_documentar(): film() {
     this->nr_elem=0;
 }
 
-film_documentar::film_documentar (string nume_, int an_ap_, int durata_, string tema_, int nr_elem_):film(nume_, an_ap_, durata_){
+film_documentar::film_documentar (string const nume_, int an_ap_, int durata_, string tema_, int nr_elem_):film(nume_, an_ap_, durata_){
     this->tema=tema_;
     this->nr_elem=nr_elem_;
 }
@@ -341,7 +341,7 @@ film_comedie::film_comedie(): film() {
     this->nr_punchl=0;
 }
 
-film_comedie::film_comedie (string nume_, int an_ap_, int durata_, bool sitcom_, int nr_punchl_):film(nume_, an_ap_, durata_){
+film_comedie::film_comedie (string const nume_, int an_ap_, int durata_, bool sitcom_, int nr_punchl_):film(nume_, an_ap_, durata_){
     this->sitcom=sitcom_;
     this->nr_punchl=nr_punchl_;
 }
