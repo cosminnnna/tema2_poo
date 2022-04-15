@@ -461,7 +461,7 @@ int main() {
     film_documentar Documentar;
     film_comedie Comedie;
 
-    film* *list_film=new film*[3];
+    film* *list_film=new film*[3];// animal *lista_animal[3];
     list_film[0]=&AlbNegru;
     list_film[1]=&Documentar;
     list_film[2]=&Comedie;
@@ -471,12 +471,13 @@ int main() {
     cin >> citire;
     if (citire == 0)
         cin >> AlbNegru;
-    if (citire == 1){
+    else if (citire == 1){
         cin >> Documentar;
         Documentar.timp_elem();
     }
-    if (citire==2)
+    else if (citire==2)
         cin >> Comedie;
+    else cout <<"Comanda "<<citire<<" nu exista!";
 
 
 
