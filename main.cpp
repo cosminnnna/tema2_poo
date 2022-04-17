@@ -1,6 +1,7 @@
 #include <iostream>
-#include <cstring>
+#include <string>
 #include <typeinfo>
+#include <cstdio>
 
 using namespace std;
 
@@ -119,7 +120,9 @@ int film::get_durata() const {
 istream& film :: citire(istream& in) {
     cout << "Care este numele filmului?";
 ////    in >> gets(this->nume);
-    in >> this-> nume;
+//    in >> this-> nume;
+    in.ignore();
+    getline(in, nume);
     cout << "In ce an a aparut filmul?";
     in >> this-> an_ap;
     cout << "Care e durata (in minute) a filmului?";
@@ -149,14 +152,15 @@ ostream &operator<<(ostream& out, film& film){
 
 class film_alb_negru: virtual public film{
 private:
-    bool color;
+//    bool color;
+    int color;
     int an_ap_color;
 public:
     //constr initializare fara parametrii
     film_alb_negru();
 
     //constructor initializare parametrii
-    film_alb_negru(string nume, int an_ap, int durata, bool color, int an_ap_color);
+    film_alb_negru(string nume, int an_ap, int durata, int color, int an_ap_color);
 
     //constructor copiere
     film_alb_negru(const film_alb_negru& film_);
@@ -177,11 +181,11 @@ public:
 };
 
 film_alb_negru :: film_alb_negru():film(){
-    color = false;
+    color = 0;
     an_ap_color = 0;
 }
 
-film_alb_negru :: film_alb_negru(string const nume_, int an_ap_, int durata_, bool color_, int an_ap_color_) : film(nume_, an_ap_, durata_)
+film_alb_negru :: film_alb_negru(string const nume_, int an_ap_, int durata_, int color_, int an_ap_color_) : film(nume_, an_ap_, durata_)
 {
 //    size_t len = strlen(nume_);
 //    nume = new char[len];
@@ -214,8 +218,13 @@ film_alb_negru &film_alb_negru :: operator = (const film_alb_negru &film2){
 
 istream& film_alb_negru::citire(istream &in){
     film ::citire(in);
-    cout << "Filmul are si o varianta color? (Tastati true in caz afirmativ, iar in caz contrar, tastati false): ";
-    in>>this->color;
+    string test;
+    cout << "Filmul are si o varianta color? (DA/NU): ";
+//    in>>this->color;
+    in >> test;
+    if (test == "DA" || test == "da" || test == "Da")
+        color = 1;
+    ///EXCEPTIE - an_ap_color > an_ap
     if (color){
         cout<<"Care este anul in care a aparut varianta color?";
         in>>this->an_ap_color;
@@ -228,9 +237,12 @@ istream& film_alb_negru::citire(istream &in){
 
 ostream &film_alb_negru::afisare(ostream &out) const {
     film::afisare(out);
-    out << "Este " << this->color << "ca filmul are o varianta color."<<endl;
-    if(this->color)
-        out << "Anul aparitiei variantei color este " << this->an_ap_color<<endl;
+    if (color)
+        out << "Filmul are si o varianta color."<<endl;
+    else
+        out <<"Filmul nu are si o varianta color."<<endl;
+    if(color)
+        out << "Anul aparitiei variantei color este " << this->an_ap_color<< " ."<<endl;
     return out;
 
 }
@@ -238,9 +250,9 @@ ostream &film_alb_negru::afisare(ostream &out) const {
 
 void film_alb_negru::distanta() {
     if (!color)
-        cout << "Filmul nu are o varianta color";
+        cout << "Filmul nu are o varianta color, deci nu puteti accesa aceasta optiune.";
     else
-        cout << "Varianta color a filmului orginial a aparut dupa "<<an_ap-an_ap_color << " ani.";
+        cout << "Varianta color a filmului orginial a aparut dupa "<<an_ap_color-an_ap<< " ani.";
 }
 
 
@@ -320,11 +332,11 @@ void film_documentar::timp_elem() {
 
 class film_comedie: virtual public film{
 private:
-    bool sitcom;
+    int sitcom;
     int nr_punchl;
 public:
     film_comedie();
-    film_comedie(string nume, int an_ap, int durata, bool sitcom, int nr_punchl);
+    film_comedie(string nume, int an_ap, int durata, int sitcom, int nr_punchl);
     film_comedie(const film_comedie& film_);
     film_comedie& operator = (const film_comedie& comedie);
     ~film_comedie() = default;
@@ -337,11 +349,11 @@ public:
 };
 
 film_comedie::film_comedie(): film() {
-    this->sitcom = false;
+    this->sitcom = 0;
     this->nr_punchl=0;
 }
 
-film_comedie::film_comedie (string const nume_, int an_ap_, int durata_, bool sitcom_, int nr_punchl_):film(nume_, an_ap_, durata_){
+film_comedie::film_comedie (string const nume_, int an_ap_, int durata_, int sitcom_, int nr_punchl_):film(nume_, an_ap_, durata_){
     this->sitcom=sitcom_;
     this->nr_punchl=nr_punchl_;
 }
@@ -364,8 +376,11 @@ film_comedie &film_comedie :: operator = (const film_comedie &comedie){
 
 istream& film_comedie::citire(istream &in) {
     film::citire(in);
-    cout <<"Este filmul un sitcom? (true/false)";
-    in >> this->sitcom;
+    string test;
+    cout << "Este filmul un sitcom? (DA/NU) ";
+    in >> test;
+    if (test == "DA" || test == "da" || test == "Da")
+        sitcom = 1;
     cout << "Numarul de punchline-uri din film este de: ";
     in >> this->nr_punchl;
     return in;
@@ -373,8 +388,12 @@ istream& film_comedie::citire(istream &in) {
 
 ostream& film_comedie::afisare(ostream &out) const {
     film::afisare(out);
-    out<<"Este"<<sitcom<<" ca filmul este un sitcom.\n"<<endl;
-    out <<"Sunt prezente " <<nr_punchl<<" de punchline-uri\n";
+    if(sitcom)
+        out << "Filmul " << nume<< "este un sitcom."<<endl;
+    else
+        cout <<"Filmul " << nume << "nu este un sitcom."<<endl;
+
+    out <<"Filmul contine  " <<nr_punchl<<" de punchline-uri.\n";
     return out;
 }
 
@@ -400,13 +419,14 @@ public:
     festival& operator = (const festival& fest);
     friend istream& operator>>(istream& in, festival& fest);
     friend ostream& operator<<(ostream& out, const festival& fest);
-    // ~festival(){};
+     ~festival(){};
+    int get_nr_filme () const{ return nr_filme;}
 
 
 };
 
 festival::festival() {
-    this->locatie = "no";
+    this->locatie = "$";
     this->editie=0;
     this-> nr_filme= 0;
 }
@@ -435,7 +455,9 @@ festival& festival::operator = (const festival& fest){
 istream& operator>>(istream& in, festival& fest)
 {
     cout << "Care este locatia festivalului?";
-    in>>fest.locatie;
+//    in>>fest.locatie;
+    in.ignore();
+    getline(in, fest.locatie);
     cout <<"A cata editie a festivalului este?";
     in>>fest.editie;
     cout<<"Cate filme se vor proiecta la aceasta editie?";
@@ -454,30 +476,46 @@ ostream& operator<<(ostream& out, const festival& fest){
 }
 int main() {
 
-
+    festival fest;
     film_alb_negru AlbNegru;
     film_documentar Documentar;
     film_comedie Comedie;
 
-    film* *list_film=new film*[3];// animal *lista_animal[3];
-    list_film[0]=&AlbNegru;
-    list_film[1]=&Documentar;
-    list_film[2]=&Comedie;
+    cin >> fest;
 
-    int citire;
-    cout << "Tasteaza 0 pentru a citi filmul alb-negru.\n"<<"Tasteaza 1 pentru a afisa filmul documentar. \n"<<"Tasteaza 2 pentru a citi filmul comedie.\n";
-    cin >> citire;
-    if (citire == 0)
-        cin >> AlbNegru;
-    else if (citire == 1){
-        cin >> Documentar;
-        Documentar.timp_elem();
-    }
-    else if (citire==2)
-        cin >> Comedie;
-    else cout <<"Comanda "<<citire<<" nu exista!";
+//    for (int j = 0; j  < fest.get_nr_filme(); j++) {
+
+        film **list_film = new film *[3];
+        list_film[0] = &AlbNegru;
+        list_film[1] = &Documentar;
+        list_film[2] = &Comedie;
+
+        int citire;
+        cout << "Tasteaza 0 pentru a citi filmul alb-negru.\n" << "Tasteaza 1 pentru a afisa filmul documentar. \n"
+             << "Tasteaza 2 pentru a citi filmul comedie.\n";
+        cin >> citire;
+        if (citire == 0){
+            cout << "Ai ales categoria  - FILME ALB NEGRU.\n";
+            cin >> AlbNegru;
+            AlbNegru.distanta();
+
+        }
+        else if (citire == 1) {
+            cin >> Documentar;
+            Documentar.timp_elem();
+        } else if (citire == 2)
+            cin >> Comedie;
+        else cout << "Comanda " << citire << " nu exista!";
+
+//        cout << AlbNegru << endl;
+//        cout << Documentar << endl;
+//        cout << Comedie;
 
 
-
+//    char name[30];
+//    printf("Enter name: ");
+//    scanf("%[^\n]",name);
+//
+//    printf("Name is: %s\n",name);
     return 0;
 }
